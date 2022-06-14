@@ -8,7 +8,7 @@ class String112 {
 	char* str = nullptr;
 	int len = 0;
 public:
-	String112() {}
+	String112() = default;
 
 	String112(const char* str) {
 		this->len = strlen(str);
@@ -111,11 +111,7 @@ public:
 
 	// деструктор
 	~String112() {
-		if (this->str != nullptr) {
-			delete[] this->str;
-			this->str = nullptr;
-			this->len = 0;
-		}
+		this->clear();
 	}
 
 	// +=
@@ -140,6 +136,22 @@ public:
 			strcpy_s(this->str, this->len + 1, s.str);
 		}
 		// возвращаем себя
+		return *this;
+	}
+
+	// конструктор перемещения
+	String112(String112&& obj) {
+		swap(this->str, obj.str);
+		swap(this->len, obj.len);
+	}
+
+	// оператор перемещения
+	String112& operator=(String112&& obj) {
+		if (this == &obj)
+			return *this;
+		swap(this->str, obj.str);
+		swap(this->len, obj.len);
+		obj.clear();
 		return *this;
 	}
 
@@ -263,17 +275,6 @@ public:
 // если есть указатели - все три метода необходимы!!!
 
 
-//*//s.getChar(int index)
-//*//сравнение срок
-//*//find('е'); //индекс первого вхождения символа е		
-//*//remove('к') //удалить все вхождения символа к
-//*//s.empty() проверяет пустая ли строка
-//*//s.reverse() перевернет строку
-//*//s.replace('e','t'); заменить все буквы е на t
-//*//s.erase(index) удалить индекс из строки					
-//*//s.insert(index,"hello") вставить в индекс строку hello
-
-
 //сравнение срок по длине и посимвольно ==
 bool operator==(const String112& a, const String112& b) {
 	// Дома все операции сравнения <, >= и т.д.
@@ -372,8 +373,10 @@ void main()
 	String112 s5("Hello , this is c++");
 	String112 s6(" my friends");
 
-	s5.insert(6, s6);
-	cout << s5 << endl;
+
+
+	//s5.insert(6, s6);
+	//cout << s5 << endl;
 	//String112 s6 ="qwerty";
 	//s5.addString(s6);
 	//cout << s5 << endl;
